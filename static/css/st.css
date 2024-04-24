@@ -1,0 +1,25 @@
+.centered-form-group {
+    margin: 0 auto; /* Set left and right margins to auto */
+    max-width: 400px; /* Set maximum width of the container */
+  }
+
+  .centered-btn {
+    text-align: center; /* Align the text inside the container */
+  }
+  .centered-btn .btn {
+    margin: 0 auto; /* Center the button horizontally */
+    display: block; /* Make the button a block element to center it */
+  }
+
+  .carousel-item img {
+    width: 300px; /* Adjust the width as needed */
+    height: 200px; /* Adjust the height as needed */
+    object-fit: cover; /* This property ensures the image covers the entire container while maintaining its aspect ratio */
+}
+
+
+.fruite-img img{
+  width: 100%; /* Adjust as needed */
+  height: 200px; /* Adjust as needed */
+  object-fit: cover; /* Maintain aspect ratio */
+}

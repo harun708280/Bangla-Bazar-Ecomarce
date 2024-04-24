@@ -1,0 +1,13 @@
+{% block b1 %}
+<div class="col-sm-2 border-end">
+    <ul class="list-unstyled">
+        <li class="d-grid"><a href="{% url "profile" %}" class="btn btn-primary">Create Profile</a></li>
+        <br>
+        <li class="d-grid"><a href="{% url "address" %}" class="btn btn-primary">View Profile</a></li>
+        <br>
+        <li class="d-grid"><a href="{% url "registration" %}" class="btn btn-primary">Sing-up</a></li>
+        <br>
+        <li class="d-grid"><a href="{% url "login" %}" class="btn btn-primary">Sing-in</a></li>
+    </ul>
+</div>
+{% endblock b1 %}

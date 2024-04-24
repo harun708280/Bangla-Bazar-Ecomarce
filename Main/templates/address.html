@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block content %}
+<br> <br> <br> <br> <br> <br> <br>
+
+<div class="container my-5">
+    
+    <div class="row">
+        <h3>Welcome <span>{{request.user.username|capfirst}}</span></h3>
+        <div class="col-sm-2 border-end">
+            <ul class="list-unstyled">
+                {% if request.user.is_authenticated %}
+                <li class="d-grid"><a href="{% url "profile" %}" class="btn btn-primary">Edit Profile</a></li>
+                <br>
+                <li class="d-grid"><a href="{% url "address" %}" class="btn btn-primary">View Profile</a></li>
+                <br>
+                <li class="d-grid"><a href="{% url "passwordchange" %}" class="btn btn-primary">Password change</a></li>
+                <br>
+                <form action="{% url "logout" %}" method="post">
+
+                    {% csrf_token %}
+                    <li> <button type="submit" class="btn btn-primary">Logout</button> </li>
+                </form>
+                {% else %}
+                <li class="d-grid"><a href="{% url "registration" %}" class="btn btn-primary">Sing-up</a></li>
+                <br>
+                <li class="d-grid"><a href="{% url "login" %}" class="btn btn-primary">Sing-in</a></li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="col-sm-9 offset-sm-1">
+            <div class="row">
+                {% for ad in add %}
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>Profile {{forloop.counter}} </h3>
+                            <p>Name: {{ad.first_name}} {{ad.last_name}}</p>
+                            <p>Email:{{ad.email}}</p>
+                            <p>Phone Number:{{ad.Contract_Number}}</p>
+                            <p>Division: {{ad.division}}a</p>
+                            <p>District: {{ad.district}}</p>
+                            <p>Thana: {{ad.thana}}</p>
+                            <p>union:{{ad.Union}}</p>
+                            
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}      
+        </div>
+    </div>
+</div>
+{% endblock content %}

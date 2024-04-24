@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Shop{% endblock title %}
+
+{% block content %}
+        <!-- Single Page Header start -->
+        <div class="container-fluid page-header py-5">
+            <h1 class="text-center text-white display-6">Vegetable All Product</h1>
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{% url "home" %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                <li class="breadcrumb-item active text-white">Shop</li>
+            </ol>
+        </div>
+        <!-- Single Page Header End -->
+
+
+        <!-- Fruits Shop Start-->
+        <br> <br> <br>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane fade show p-0 active">
+                <div class="row g-4">
+                    <div class="owl-carousel vegetable-carousel justify-content-center">
+                        {% for pa in ft %}
+                        <div class="border border-primary rounded position-relative vesitable-item">
+                            
+                            <div class="vesitable-img" style="
+                            width: 303px !important;
+                            height: 242.39px !important;
+                        ">
+                                <img src="{{pa.img.url}}" class="img-fluid w-100 rounded-top" alt="" style="
+                                width: 100% !important;
+                                height: 100% !important;
+                            ">
+                            </div>
+                            <div class="text-white bg-primary px-3 py-1 rounded position-absolute" style="top: 10px; right: 10px;">{{pa.item}}</div>
+                            <div class="p-4 rounded-bottom">
+                                <h4>{{pa.name}}</h4>
+                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit sed do eiusmod te incididunt</p>
+                                <div class="d-flex justify-content-between flex-lg-wrap">
+                                    <p class="text-dark fs-5 fw-bold mb-0">${{pa.price}} / kg</p>
+                                    <a href="{% url "shop-detail" pa.id %}" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+        {% endblock content %}
+        <!-- Fruits Shop End-->
+
+

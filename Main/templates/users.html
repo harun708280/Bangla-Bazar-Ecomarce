@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+{% block content %}
+<link rel="stylesheet" href="{% static "css/st.css" %}">
+<br> <br> <br> <br> <br> <br> <br> <br>
+
+<div class="col-sm-5 offset-sm-1 form-group centered-form-group col-lg-2 mb-3 ">
+    
+        <h3>Welcome <span>{{request.user.username|capfirst}}</span></h3>
+        
+            <ul class="list-unstyled text-center">
+                {% if request.user.is_authenticated %}
+                <li class="d-grid"><a href="{% url "profile" %}" class="btn btn-primary">Edit Profile</a></li>
+                <br>
+                <li class="d-grid"><a href="{% url "address" %}" class="btn btn-primary">View Profile</a></li>
+                <br>
+                <li class="d-grid"><a href="{% url "passwordchange" %}" class="btn btn-primary">Password change</a></li>
+                <br>
+                <form action="{% url "logout" %}" method="post">
+
+                    {% csrf_token %}
+                    <li> <button type="submit" class="btn btn-primary btn-center centered-btn ">Logout</button> </li>
+                </form>
+                {% else %}
+                <li class="d-grid"><a href="{% url "registration" %}" class="btn btn-primary">Sing-up</a></li>
+                <br>
+                <li class="d-grid"><a href="{% url "login" %}" class="btn btn-primary">Sing-in</a></li>
+                {% endif %}
+            </ul>
+        
+        
+             
+   
+</div>
+{% endblock content %}
