@@ -92,13 +92,13 @@
                 <form action="" method="POST">
                     <div class="mt-5">
                         {% csrf_token %}
-                        {{ cuponform.coupon_code.errors }}
-                        <input type="text" name="coupon_code" class="form-control" style="width: 200px; height: 37px;" required placeholder='Add To Cupon'>
+                        {{cuponform}}
+                        
                         <br>
                         <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Apply Coupon</button>
                     </div>  
-                </form>
-                
+            </form>
+            
                 <div class="row g-4 justify-content-end">
                     <div class="col-8"></div>
                     <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">

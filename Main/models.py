@@ -175,7 +175,7 @@ class OrderPlaced(models.Model):
     email=models.EmailField( max_length=254)
     
     def __str__(self):
-        return (self.id)
+        return str(self.user)
     
 class Review(models.Model):
     product=models.ForeignKey(Product, on_delete=models.CASCADE)
