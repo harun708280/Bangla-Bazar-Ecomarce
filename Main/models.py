@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.core.validators import MinValueValidator,MaxValueValidator
+
 DIVISION_CHOICES = (
     ('Dhaka','Dhaka'),
     ('Rangpur','Rangpur'),
@@ -196,11 +198,26 @@ class Reviews(models.Model):
     def __str__(self):
         return str(self.id)
     
+class Cupon(models.Model):
+    code = models.CharField( max_length=50,unique=True)
+    valid_from=models.DateField()
+    valid_to=models.DateTimeField()
+    discaunt=models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(70)])
+    active=models.BooleanField(default=False)
     
     
+    def __str__(self):
+        return self.code
+     
     
-       
     
-    
+
+
+
+
+
+
+
+
 
 

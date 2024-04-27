@@ -1,15 +1,16 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
-from .forms import registrationform,cprofile,ReviewFrom
+from .forms import registrationform,cprofile,ReviewFrom,CuponcodeFrom
 from django.views import View
 from django.contrib import messages
-from .models import customers ,hero,Product,Products,Customer_Reivew,Cart,Customer_Contract_From,OrderPlaced,onlyOne_Special_Product,Reviews
+from .models import customers ,hero,Product,Products,Customer_Reivew,Cart,Customer_Contract_From,OrderPlaced,onlyOne_Special_Product,Reviews,Cupon
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 # Create your views here.
 class homeView(View):
   def get(self,request):
@@ -45,7 +46,7 @@ def shop(request):
     datafinal=paginator.get_page(page_number)
    
     return render(request,'shop.html',{'p':datafinal,'fe':fe})
-
+@method_decorator(login_required,name='dispatch')
 class shop_detailView(View):
     def get(self, request, pk):
         if request.user.is_authenticated:
@@ -66,19 +67,23 @@ class shop_detailView(View):
             return redirect("/login")
 
     def post(self, request, pk):
-        product = Product.objects.get(pk=pk)
-        comment_form = ReviewFrom(request.POST)
-        
-        if comment_form.is_valid():
-            new_review = comment_form.save(commit=False)
-            new_review.product = product
-            new_review.user = request.user
-            new_review.save()  # Save the review
-            return redirect('shop-detail', pk=pk)
+        if request.user.is_authenticated:
+            product = Product.objects.get(pk=pk)
+            comment_form = ReviewFrom(request.POST)
+            
+            if comment_form.is_valid():
+                new_review = comment_form.save(commit=False)
+                new_review.product = product
+                new_review.user = request.user
+                new_review.save()  # Save the review
+                return redirect('shop-detail', pk=pk)
+            else:
+                
+                print("Form is invalid:", comment_form.errors)
+                return redirect('home')  
+            
         else:
-            # Handle invalid form data
-            print("Form is invalid:", comment_form.errors)
-            return redirect('home')  # Redirect to the homepage or somewhere else
+            return redirect('/login/')
          
 def vegetable(request):
     vg=Product.objects.filter(item='vegetables')
@@ -166,12 +171,33 @@ def chackout(request):
                 temamount=(p.quantity*p.product.price)
                 amount=temamount+amount
                 totalammount=amount+shiping_amount
+            
+            cuponform=CuponcodeFrom(request.POST)
+            if cuponform.is_valid():
+                current_time=timezone.now()
+                code=cuponform.cleaned_data.get('code')
+                cupon_obj=Cupon.objects.get(code=code)
+                if cupon_obj.valid_to >= current_time and cupon_obj.active :
+                   get_discaunt=(cupon_obj.discaunt/100)*totalammount
+                   total_price_dis=totalammount-get_discaunt
+                   request.session['discaount_total']=total_price_dis
+                   request.session['copon_code']=code
+                   
+                   return redirect('cart')
+                
+                else:
+                   return redirect('home')
+            
+            total_price_dis=request.session.get('discaount_total')
+            cupon_code=request.session.get('cupon_code')
             print(Cart.line_total)   
             return render(request,'chackout.html',{'temamount':temamount,
                  'amount':amount,
                  'totalammount':totalammount,
                  'cart':cart_item,
                  'shiping_amount':shiping_amount,
+                 'total_price_dis':total_price_dis,
+                 'copon_code':cupon_code
                  })
         else:
             
@@ -311,13 +337,35 @@ def show_cart(request):
                 temamount=(p.quantity*p.product.price)
                 amount=temamount+amount
                 totalammount=amount+shiping_amount
-            print(Cart.line_total)   
+            print(Cart.line_total)  
+            
+            cuponform=CuponcodeFrom(request.POST)
+            if cuponform.is_valid():
+                current_time=timezone.now()
+                code=cuponform.cleaned_data.get('code')
+                cupon_obj=Cupon.objects.get(code=code)
+                if cupon_obj.valid_to >= current_time and cupon_obj.active :
+                   get_discaunt=(cupon_obj.discaunt/100)*totalammount
+                   total_price_dis=totalammount-get_discaunt
+                   request.session['discaount_total']=total_price_dis
+                   request.session['copon_code']=code
+                   
+                   return redirect('cart')
+                
+                else:
+                   return redirect('home')
+            
+            total_price_dis=request.session.get('discaount_total')
+            cupon_code=request.session.get('cupon_code')
             return render(request,'cart.html',{'temamount':temamount,
                  'amount':amount,
                  'totalammount':totalammount,
                  'cart':cart,
                  'shiping_amount':shiping_amount,
-                 'line_total':Cart.line_total})
+                 'line_total':Cart.line_total,
+                 'cuponform':cuponform,
+                 'total_price_dis':total_price_dis,
+                 'copon_code':cupon_code})
         else:
             
             return render(request,'404.html')

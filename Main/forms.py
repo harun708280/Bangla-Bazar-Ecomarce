@@ -46,3 +46,6 @@ class ReviewFrom(forms.ModelForm):
         model=Reviews
         
         fields=('comment','rating')
+        
+class CuponcodeFrom(forms.Form):
+    code=forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
