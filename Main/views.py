@@ -38,6 +38,9 @@ class homeView(View):
     return render(request, 'home.html',{"hero":heros,'vg':vagitable,'fr':fru,'br':brad,'me':meat,'p':p,'r':re,'s':s,'pa':pa,'on':on,'total_item':total_item})
 
 def shop(request):
+    total_item=0
+    if request.user.is_authenticated:
+        total_item=len(Cart.objects.filter(user=request.user))
     p=Product.objects.all()
     fe=Product.objects.all()[9:15]
     
@@ -45,11 +48,13 @@ def shop(request):
     page_number=request.GET.get('page')
     datafinal=paginator.get_page(page_number)
    
-    return render(request,'shop.html',{'p':datafinal,'fe':fe})
+    return render(request,'shop.html',{'p':datafinal,'fe':fe,'total_item':total_item})
 @method_decorator(login_required,name='dispatch')
 class shop_detailView(View):
     def get(self, request, pk):
+        total_item=0
         if request.user.is_authenticated:
+            total_item=len(Cart.objects.filter(user=request.user))
             
             sd = Product.objects.get(pk=pk)
             reviews=Reviews.objects.filter(product=sd)
@@ -62,7 +67,7 @@ class shop_detailView(View):
                 quantity = cart.quantity
             except Cart.DoesNotExist:
                 quantity = 1
-            return render(request, 'shop-detail.html', {'sd': sd, 'pa': pa, 'quantity': quantity, 'fe': fe,'r':reviews,'cf':comment_from})
+            return render(request, 'shop-detail.html', {'sd': sd, 'pa': pa, 'quantity': quantity, 'fe': fe,'r':reviews,'cf':comment_from,'total_item':total_item})
         else:
             return redirect("/login")
 
@@ -137,6 +142,7 @@ def minas_cart(request):
 
 @login_required
 def cart(request):
+    
     user = request.user
     product_id = request.GET.get('prod_id')
     product_quantity = request.GET.get('product_quantity')
@@ -185,8 +191,7 @@ def chackout(request):
                    
                    return redirect('cart')
                 
-                else:
-                   return redirect('home')
+                
             
             total_price_dis=request.session.get('discaount_total')
             cupon_code=request.session.get('cupon_code')
@@ -325,7 +330,9 @@ def users(request):
 
 
 def show_cart(request):
+    total_item=0
     if request.user.is_authenticated:
+        total_item=len(Cart.objects.filter(user=request.user))
         user=request.user
         cart=Cart.objects.filter(user=user)
         amount=0.0
@@ -365,7 +372,7 @@ def show_cart(request):
                  'line_total':Cart.line_total,
                  'cuponform':cuponform,
                  'total_price_dis':total_price_dis,
-                 'copon_code':cupon_code})
+                 'copon_code':cupon_code,'total_item':total_item})
         else:
             
             return render(request,'404.html')
