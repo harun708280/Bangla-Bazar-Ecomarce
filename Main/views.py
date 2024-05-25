@@ -386,3 +386,8 @@ def search(request):
         
         else:
             return render(request,'search.html')
+        
+        
+def order(request):
+    orders=OrderPlaced.objects.filter(user=request.user)
+    return render(request,'order.html',{'oreder':orders})

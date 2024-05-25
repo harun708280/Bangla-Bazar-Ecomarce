@@ -185,16 +185,16 @@
                                     <div class="col-12">
                                         <div class="pagination d-flex justify-content-center mt-5">
                                             {% if p.has_previous %}
-                                            <a href="/?page={{p.previous_page_number}}" class="rounded">&laquo;</a>
+                                            <a href="?page=1"class="rounded">&laquo;</a>
+                                            
                                             {% endif %}
-                                            <a href="?page=1" class=" rounded">1</a>
-                                            <a href="?page=2" class="rounded">2</a>
-                                            <a href="?page=3" class="rounded">3</a>
-                                            <a href="?page=4" class="rounded">4</a>
-                                            <a href="?page=5" class="rounded">5</a>
-                                            <a href="?page=6" class="rounded">6</a>
+                                            {% for num in p.paginator.page_range %}
+                                            <a href="?page={{num}}" class=" rounded">{{num}}</a>
+                                            {% endfor %}
+                                           
                                             {% if p.has_next %}
-                                            <a href="/?page={{p.next_page_number}}" class="rounded">&raquo;</a>
+                                            
+                                            <a href="?page={{p.paginator.num_pages}}"class="rounded">&raquo;</a>
                                             {% endif %}
                                         </div>
                                     </div>
